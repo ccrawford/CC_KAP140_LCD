@@ -17,15 +17,14 @@
     "Info": {
       "CanInstallFirmware": true,
       "CanResetBoard": true,
-      "FirmwareBaseName": "mobiflight_template_raspberrypico",
+      "FirmwareBaseName": "ccrawford_cc_kap140_lcd_raspberrypico",
       "FirmwareExtension": "uf2",
       "FriendlyName": "MobiFlight Template RaspiPico",
       "LatestFirmwareVersion": "0.0.1",
-      "MobiFlightType": "Mobiflight Template RaspiPico",
+      "MobiFlightType": "CCrawford CC_KAP140_LCD RaspiPico",
       "ResetFirmwareFile": "reset.raspberry_pico_flash_nuke.uf2",
       "CustomDeviceTypes": [
-        "MOBIFLIGHT_TEMPLATE",
-        "MOBIFLIGHT_TEMPLATE2"
+        "CC_KAP140_LCD"
       ],
       "Community": {
         "Project": "Your Project",

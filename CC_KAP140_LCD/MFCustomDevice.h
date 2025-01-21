@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include "MyCustomClass.h"
+#include "CC_KAP140_LCD.h"
 
 // only one entry required if you have only one custom device
 enum {
@@ -20,7 +20,7 @@ public:
 private:
     bool           getStringFromMem(uint16_t addreeprom, char *buffer, bool configFromFlash);
     bool           _initialized = false;
-    MyCustomClass *_mydevice;
+    CC_KAP140_LCD *_mydevice;
     uint8_t        _pin1, _pin2, _pin3;
     uint8_t        _customType = 0;
 };

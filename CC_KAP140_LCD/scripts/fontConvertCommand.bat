@@ -1,0 +1,2 @@
+ cd \temp\FontConvert
+ .\bdfconv.exe -v -f 1 -m "32-127" KAP_140_20p_bold.bdf -o  C:\Users\chris\source\experiment\312OLED_Test\312OLED_Test\src\kap140_20b_font.h -n KAP_140_20b_font -d KAP_140_20p_bold.bdf

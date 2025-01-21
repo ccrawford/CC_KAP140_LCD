@@ -1,0 +1,85 @@
+{
+    "$schema": "./mfdevice.schema.json",
+    "Info": {
+      "Label": "CCrawford's CC_KAP140_LCD",
+      "Type": "CC_KAP140_LCD",
+      "Author": "CCrawford",
+      "URL": "https://github.com",
+      "Version" : "1.0.0"
+    },
+    "Config": {
+      "Pins": [
+      ],
+      "isI2C": false
+    },
+    "MessageTypes": [
+      {
+        "id": 0,
+        "label": "AP is on",
+        "description": "1 on 0 off"
+      },      
+      {
+        "id": 1,
+        "label": "Lateral mode",
+        "description": "$ is a number that indicates lateral mode: : 0 none, 1 ROL, 2 HDG, 3 NAV, 4 APR, 5 REV"
+      },
+      {
+        "id": 2,
+        "label": "Vertical mode",
+        "description": "$ is a number indicating vertical mode: 0 nothing 1 ALT, 2 VS, 3 GS" 
+      },
+      {
+        "id": 3,
+        "label": "Right Block Data",
+        "description": "$ is Number to display in the right block. (the alt, vs, baro value)"
+      },
+      {
+        "id": 4,
+        "label": "Lateral Arm mode",
+        "description": "$ is number indicating active lateral arm: 0 none, 1 NAV, 2 APR, 3 REV 4 GS"
+      },
+      {
+        "id": 5,
+        "label": "Vertical Arm Mode",
+        "description": "$ is number indicating vertical arm mode: ALT"
+      },
+      {
+        "id": 6,
+        "label": "Trim indicator",
+        "description": "$ is a number indicating the trim indicator: 0 none, 1 up, 2 down"
+      },
+      {
+        "id": 7,
+        "label": "Alert Indicator",
+        "description": "$ is whether the Alert indicator is lit. 0 off, 1 on"
+      },
+      {
+        "id": 8,
+        "label": "Baro Mode",
+        "description": "$ is a number indicating if we are in Baro mode: 0 no, 1 HPA, 2 inHg"
+      },
+      {
+        "id": 9,
+        "label": "Self Test mode",
+        "description": "$ is a number indicating we are in self test mode. 0 no, 1 yes"
+      },
+      {
+        "id": 10,
+        "label": "Baro mode blinking",
+        "description": "$ is a number indicating the baro mode is blinking. 0 no, 1 yes"
+      },
+      {
+        "id": 11,
+        "label": "Show VS",
+        "description": "1 if VS is temporarily displayed, else 0"
+      },
+      {
+        "id": 12,
+        "label": "AP is Powered",
+        "description": "1 if the KAP140 has power, 0 if the unit is switched completely off"
+      }
+
+
+    ]
+  }
+  
