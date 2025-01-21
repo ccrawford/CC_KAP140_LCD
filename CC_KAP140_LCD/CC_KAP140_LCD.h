@@ -11,12 +11,27 @@
 #define MID_TEXT_X (AP_X + 24)
 #define PT_X (MID_TEXT_X + 62)
 #define RIGHT_TEXT_X (PT_X + 11)
-#define FPM_X (RIGHT_TEXT_X + 50)
+#define FPM_X (RIGHT_TEXT_X + 60)
 #define FT_X (FPM_X + 32)
+#define ALERT_X (RIGHT_TEXT_X + 17)
+
+// These should really be in the font file, but it auto-authors.
+#define GLYPH_AP 0x5B
+#define GLYPH_FT 0x22
+#define GLYPH_PITCHUP 0x25
+#define GLYPH_PITCHDN 0x26
+#define GLYPH_ARM 0x5D
+#define GLYPH_ALERT 0x23
+#define GLYPH_IN 0x7E
+#define GLYPH_HG 0x5E
+#define GLYPH_HPA 0x21
+#define GLYPH_FPM 0x7B
+
+
 
 // Vertical positions
-#define TOP_LINE_Y 26
-#define BOT_LINE_Y 63
+#define TOP_LINE_Y 27
+#define BOT_LINE_Y 62
 
 class CC_KAP140_LCD
 {
@@ -31,6 +46,7 @@ public:
 private:
     bool _initialised;
     bool _apHasPower = false;
+    bool _apWasActive = false;
     bool _apActive = false;
     bool _selfTestMode = false;
     bool _trimUp = false;
@@ -49,9 +65,14 @@ private:
     int _lateralArmMode = 0;     // 0: none, 1: NAV, 2: APR, 3:REV, 4: GS
     int _verticalArmMode = 0;    // 0: none, 1: ALT
     bool _tempVsMode = false;
+    bool _apOffAlertMode = false;
+    long unsigned int _apOffAlertTimer = 0;
 
     void drawDisplay();
     void fillTestPattern();
+    void fillRightData();
+    void fillUnits();
+    void fillSelfTest();
 
     uint8_t _pin1, _pin2, _pin3;
 };

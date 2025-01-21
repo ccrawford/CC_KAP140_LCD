@@ -109,6 +109,21 @@ void CC_KAP140_LCD::set(int16_t messageID, char *setPoint)
         break;
     case 0:
         _apActive = (data == 1);
+
+        // Check to see if _ap is turning off.
+        if (_apActive)
+        {
+            _apWasActive = true;
+            _apOffAlertMode = false;
+        }
+        // _apOffAlertMode = (!_apActive && _apWasActive);  // if ap is now not active, but was, turn on the alert mode
+        if (!_apActive && _apWasActive)
+        {
+            _apOffAlertMode = true;
+            _apOffAlertTimer = millis();
+            _apWasActive = false;
+        }
+
         break;
     case 1:
         // Lateral mode
@@ -166,8 +181,6 @@ void CC_KAP140_LCD::update()
 
 void CC_KAP140_LCD::drawDisplay()
 {
-    static unsigned int lastBlink = 0;
-
     u8g2.clearBuffer();
 
     if (!_apHasPower)
@@ -182,24 +195,10 @@ void CC_KAP140_LCD::drawDisplay()
 
     if (_selfTestMode)
     {
-        
-        if (_rightBlockData == 100)
-        {
-            u8g2.drawStr(MID_TEXT_X, TOP_LINE_Y, "PFT");
-            u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, "1");
-        }
-        if (_rightBlockData == 200)
-        {
-            u8g2.drawStr(MID_TEXT_X, TOP_LINE_Y, "PFT");
-            u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, "2");
-        }
-        if (_rightBlockData == 88888)
-        {
-            fillTestPattern();
-        }
+        fillSelfTest();
 
         u8g2.sendBuffer();
-        
+
         return;
     }
 
@@ -209,20 +208,37 @@ void CC_KAP140_LCD::drawDisplay()
         // blinks like 0.7sec on 0.3 sec off
         if (millis() % 1000 < 700)
         {
-            // char debug[20];
-            // sprintf(debug, "%ld", millis() % 1000);
-            // u8g2.drawStr(0,30, debug);
-            int strWidth = u8g2.getStrWidth(formatComma(_rightBlockData));
-            u8g2.drawStr(254 - strWidth, TOP_LINE_Y, formatComma(_rightBlockData));
-            if (_baroMode == 1)
-                u8g2.drawGlyph(RIGHT_TEXT_X + 17, BOT_LINE_Y, 0x21); // HPA
-            if (_baroMode == 2)
-            {
-                u8g2.drawGlyph(FPM_X, BOT_LINE_Y, 0x7E); // IN
-                u8g2.drawGlyph(FT_X, BOT_LINE_Y, 0x5E);  // HG
-            }
+            fillRightData();
+            fillUnits();
         }
-        lastBlink = !lastBlink;
+        u8g2.sendBuffer();
+        return;
+    }
+
+    // if ap turn off alert mode, blink the AP notification and leave the target alt up.
+    if (_apOffAlertMode)
+    {
+        // Blinks for 5 seconds.
+        if (millis() - _apOffAlertTimer > 5000)
+        {
+            _apOffAlertMode = false;
+            return;
+        }
+
+        // Target ALT remains solid
+
+        int strWidth = u8g2.getStrWidth(formatComma(_rightBlockData));
+        u8g2.drawStr(254 - strWidth, TOP_LINE_Y, formatComma(_rightBlockData));
+
+        u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_FT); // FT
+
+        // blinks like 0.7sec on 0.3 sec off
+        if (millis() % 1000 < 700)
+        {
+            u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, " AP");
+            u8g2.drawGlyph(AP_X, TOP_LINE_Y, GLYPH_AP); // AP_box
+        }
+
         u8g2.sendBuffer();
         return;
     }
@@ -256,16 +272,16 @@ void CC_KAP140_LCD::drawDisplay()
 
     // Draw the AP on symbol
     if (_apActive)
-        u8g2.drawGlyph(AP_X, TOP_LINE_Y, 0x5B); // AP_box
+        u8g2.drawGlyph(AP_X, TOP_LINE_Y, GLYPH_AP); // AP_box
 
     // Draw the vertical mode (ALT/VS)
     switch (_rightBlockMode)
     {
     case 1:
-        val = "ALT";
+        val = " VS";
         break;
     case 2:
-        val = " VS";
+        val = "ALT";
         break;
     case 3:
         val = " GS";
@@ -279,13 +295,11 @@ void CC_KAP140_LCD::drawDisplay()
 
     // Draw Pitch up/down
     if (_trimUp)
-        u8g2.drawGlyph(PT_X, TOP_LINE_Y - 4, 0x25);
+        u8g2.drawGlyph(PT_X, TOP_LINE_Y - 4, GLYPH_PITCHUP); // Pitch up
     if (_trimDown)
-        u8g2.drawGlyph(PT_X, TOP_LINE_Y + 4, 0x26);
+        u8g2.drawGlyph(PT_X, TOP_LINE_Y + 4, GLYPH_PITCHDN); // Pitch down
 
-    // Draw the vertical data (right block numeric with comma for 1000s)
-    int strWidth = u8g2.getStrWidth(formatComma(_rightBlockData));
-    u8g2.drawStr(254 - strWidth, TOP_LINE_Y, formatComma(_rightBlockData));
+    fillRightData();
 
     // Draw the lateral armed mode nav/apr/rev with ARM marker lower left
     switch (_lateralArmMode)
@@ -309,41 +323,23 @@ void CC_KAP140_LCD::drawDisplay()
 
     u8g2.drawStr(LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
     if (_lateralArmMode)
-        u8g2.drawGlyph(AP_X, BOT_LINE_Y, 0x5D); // ARM
+        u8g2.drawGlyph(AP_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
     // Draw vertical armed mode with ARM marker.
     if (_verticalArmMode == 1)
     {
         u8g2.drawStr(MID_TEXT_X, BOT_LINE_Y, "ALT");
-        u8g2.drawGlyph(PT_X, BOT_LINE_Y, 0x5D); // ARM
+        u8g2.drawGlyph(PT_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
     }
 
     // GLYPH SECTION
     // draw ALERT box
     if (_alertIndicator)
     {
-        u8g2.drawGlyph(RIGHT_TEXT_X + 8, BOT_LINE_Y, 0x23);
+        u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_ALERT);
     }
 
-    // Draw appropriate units (FPM / FT )
-    // Pressure mode first.
-    if (_baroMode)
-    {
-        if (_baroMode == 1)
-            u8g2.drawGlyph(RIGHT_TEXT_X + 17, BOT_LINE_Y, 0x21); // HPA
-        if (_baroMode == 2)
-        {
-            u8g2.drawGlyph(FPM_X, BOT_LINE_Y, 0x7E); // IN
-            u8g2.drawGlyph(FT_X, BOT_LINE_Y, 0x5E);  // HG
-        }
-    }
-    else // FT or FPM
-    {
-        if (_rightBlockMode == 1)
-            u8g2.drawGlyph(FPM_X, BOT_LINE_Y, 0x7B); // FPM
-        if (_rightBlockMode == 2 || _rightBlockMode == 0)
-            u8g2.drawGlyph(FT_X, BOT_LINE_Y, 0x22); // FT
-    }
+    fillUnits();
 
     u8g2.sendBuffer();
 }
@@ -389,6 +385,70 @@ char *formatComma(int number)
     return formatted;
 }
 
+void CC_KAP140_LCD::fillSelfTest()
+{
+    if (_rightBlockData == 100)
+    {
+        u8g2.drawStr(MID_TEXT_X, TOP_LINE_Y, "PFT");
+        u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, "1");
+    }
+    if (_rightBlockData == 200)
+    {
+        u8g2.drawStr(MID_TEXT_X, TOP_LINE_Y, "PFT");
+        u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, "2");
+    }
+    if (_rightBlockData == 88888)
+    {
+        fillTestPattern();
+    }
+    return;
+}
+
+void CC_KAP140_LCD::fillRightData()
+{
+    // Draw the vertical data (right block numeric with comma for 1000s)
+    // Need special handling for the decimal on the in hg baro.
+    char rightBlockDisp[12];
+    if (_baroMode == 2)
+    {
+        sprintf(rightBlockDisp, "%02d.%02d ", _rightBlockData / 100, _rightBlockData % 100);
+    }
+    else
+    {
+        strcpy(rightBlockDisp, formatComma(_rightBlockData));
+    }
+
+    int strWidth = u8g2.getStrWidth(rightBlockDisp);
+    u8g2.drawStr(254 - strWidth, TOP_LINE_Y, rightBlockDisp);
+
+    return;
+}
+
+void CC_KAP140_LCD::fillUnits()
+{
+    // Draw appropriate units (FPM / FT )
+    // Pressure mode first.
+    if (_baroMode)
+    {
+        if (_baroMode == 1)
+            u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_HPA); // HPA
+        if (_baroMode == 2)
+        {
+            u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_IN); // IN
+            u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_HG);  // HG
+        }
+    }
+    else // FT or FPM
+    {
+        if (_tempVsMode)
+            u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_FPM); // FPM
+        else
+            u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_FT); // FT
+    }
+
+    return;
+}
+
 void CC_KAP140_LCD::fillTestPattern()
 {
     String val;
@@ -397,30 +457,32 @@ void CC_KAP140_LCD::fillTestPattern()
     val = ":_:";
     u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, val.c_str());
 
-    u8g2.drawGlyph(AP_X, TOP_LINE_Y, 0x5B); // AP_box
+    u8g2.drawGlyph(AP_X, TOP_LINE_Y, GLYPH_AP); // AP_box
 
     val = "8:;";
     u8g2.drawStr(MID_TEXT_X, TOP_LINE_Y, val.c_str());
 
-    u8g2.drawGlyph(PT_X, TOP_LINE_Y - 4, 0x25); // TRIM UP
-    u8g2.drawGlyph(PT_X, TOP_LINE_Y + 4, 0x26); // TRIM DOWN
+    u8g2.drawGlyph(PT_X, TOP_LINE_Y - 4, GLYPH_PITCHUP); // TRIM UP
+    u8g2.drawGlyph(PT_X, TOP_LINE_Y + 4, GLYPH_PITCHDN); // TRIM DOWN
 
     val = "88,888";
     u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, val.c_str());
 
     val = ":8:";
     u8g2.drawStr(LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
-    u8g2.drawGlyph(AP_X, BOT_LINE_Y, 0x5D); // ARM
+    u8g2.drawGlyph(AP_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
     val = ";8;";
     u8g2.drawStr(MID_TEXT_X, BOT_LINE_Y, val.c_str());
-    u8g2.drawGlyph(PT_X, BOT_LINE_Y, 0x5D); // ARM
+    u8g2.drawGlyph(PT_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
-    u8g2.drawGlyph(RIGHT_TEXT_X + 8, BOT_LINE_Y, 0x23);  // ALERT
-    u8g2.drawGlyph(RIGHT_TEXT_X + 17, BOT_LINE_Y, 0x21); // HPA
-    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, 0x7E);             // IN
-    u8g2.drawGlyph(FT_X, BOT_LINE_Y, 0x5E);              // HG
+    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_ALERT);  // ALERT
+    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_HPA); // HPA
+    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_IN);             // IN
+    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_HG);              // HG
 
-    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, 0x7B); // FPM
-    u8g2.drawGlyph(FT_X, BOT_LINE_Y, 0x22);  // FT
+    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_FPM); // FPM
+    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_FT);  // FT
+
+    return;
 }
