@@ -7,12 +7,12 @@
 
 // Horizontal positions
 #define LEFT_EDGE_X 1
-#define AP_X (LEFT_EDGE_X + 62)
-#define MID_TEXT_X (AP_X + 24)
+#define AP_X (LEFT_EDGE_X + 64)
+#define MID_TEXT_X (AP_X + 22)
 #define PT_X (MID_TEXT_X + 62)
 #define RIGHT_TEXT_X (PT_X + 11)
 #define FPM_X (RIGHT_TEXT_X + 60)
-#define FT_X (FPM_X + 32)
+#define FT_X (FPM_X + 23)
 #define ALERT_X (RIGHT_TEXT_X + 17)
 
 // These should really be in the font file, but it auto-authors.

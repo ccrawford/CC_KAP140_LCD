@@ -25,22 +25,23 @@ CC_KAP140_LCD::CC_KAP140_LCD(uint8_t Pin1, uint8_t Pin2)
 
 void CC_KAP140_LCD::begin()
 {
+
     u8g2.begin();
     u8g2.setFont(KAP_140_20b_font); // Use custom font
     u8g2.setFontMode(0);            // Enable transparent mode
     u8g2.setDrawColor(1);           // Note: this is a monochrome display. We can either draw on or off...
 
-    //   u8g2.clearBuffer();
-    //   u8g2.drawStr(0, 20, "NAV");
-    //   delay(1000);
-    //   u8g2.drawStr(0, 200, " 1,200");
-    //   u8g2.sendBuffer();
-    //   delay(1000);
-    //   u8g2.setPowerSave(true);
-    //   delay(1000);
-    //   u8g2.setPowerSave(false);
-    //   delay(1000);
-    //   u8g2.sendBuffer();
+    u8g2.clearBuffer();
+    u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, "CC 172 LCD 0.1");
+    u8g2.drawStr(LEFT_EDGE_X+6, BOT_LINE_Y, "CCRAWFORD.ORG");
+    u8g2.sendBuffer();
+    delay(3000);
+
+    u8g2.clearBuffer();
+    fillTestPattern();
+    u8g2.sendBuffer();
+    delay(3000);
+
 }
 
 void CC_KAP140_LCD::attach(uint16_t Pin3, char *init)
