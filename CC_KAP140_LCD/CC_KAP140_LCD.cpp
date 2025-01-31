@@ -30,10 +30,11 @@ void CC_KAP140_LCD::begin()
     u8g2.setFont(KAP_140_20b_font); // Use custom font
     u8g2.setFontMode(0);            // Enable transparent mode
     u8g2.setDrawColor(1);           // Note: this is a monochrome display. We can either draw on or off...
+    // u8g2.setDisplayRotation(0);  // Set in constructor. R0 is pins on right, narrow part on bottom.
 
     u8g2.clearBuffer();
     u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, "CC 172 LCD 0.1");
-    u8g2.drawStr(LEFT_EDGE_X+6, BOT_LINE_Y, "CCRAWFORD.ORG");
+    u8g2.drawStr(LEFT_EDGE_X + 6, BOT_LINE_Y, "CCRAWFORD.ORG");
     u8g2.sendBuffer();
     delay(3000);
 
@@ -41,7 +42,6 @@ void CC_KAP140_LCD::begin()
     fillTestPattern();
     u8g2.sendBuffer();
     delay(3000);
-
 }
 
 void CC_KAP140_LCD::attach(uint16_t Pin3, char *init)
@@ -477,13 +477,13 @@ void CC_KAP140_LCD::fillTestPattern()
     u8g2.drawStr(MID_TEXT_X, BOT_LINE_Y, val.c_str());
     u8g2.drawGlyph(PT_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
-    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_ALERT);  // ALERT
-    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_HPA); // HPA
-    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_IN);             // IN
-    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_HG);              // HG
+    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_ALERT); // ALERT
+    u8g2.drawGlyph(ALERT_X, BOT_LINE_Y, GLYPH_HPA);   // HPA
+    u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_IN);      // IN
+    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_HG);       // HG
 
     u8g2.drawGlyph(FPM_X, BOT_LINE_Y, GLYPH_FPM); // FPM
-    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_FT);  // FT
+    u8g2.drawGlyph(FT_X, BOT_LINE_Y, GLYPH_FT);   // FT
 
     return;
 }

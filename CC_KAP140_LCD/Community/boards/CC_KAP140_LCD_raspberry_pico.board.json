@@ -19,7 +19,7 @@
       "CanResetBoard": true,
       "FirmwareBaseName": "ccrawford_cc_kap140_lcd_raspberrypico",
       "FirmwareExtension": "uf2",
-      "FriendlyName": "MobiFlight Template RaspiPico",
+      "FriendlyName": "CCrawford KAP140 LCD RaspiPico",
       "LatestFirmwareVersion": "0.0.1",
       "MobiFlightType": "CCrawford CC_KAP140_LCD RaspiPico",
       "ResetFirmwareFile": "reset.raspberry_pico_flash_nuke.uf2",
@@ -27,10 +27,10 @@
         "CC_KAP140_LCD"
       ],
       "Community": {
-        "Project": "Your Project",
-        "Website": "https://YourWebsite.com",
-        "Docs": "https://YourWebsite.com",
-        "Support": "https://YourWebsite.com"
+        "Project": "CCrawford KAP140 with LCD Display",
+        "Website": "https://github.com/ccrawford/FSHardware",
+        "Docs": "https://github.com/ccrawford/FSHardware",
+        "Support": "https://github.com/ccrawford/FSHardware"
       }
     },
     "ModuleLimits": {
