@@ -9,6 +9,9 @@
     },
     "Config": {
       "Pins": [
+        "CS (reccomend 17)",
+        "DC (reccomend 20)",
+        "Reset (reccomend 21)"
       ],
       "isI2C": false
     },

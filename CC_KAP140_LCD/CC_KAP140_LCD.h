@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arduino.h"
+#include <U8g2lib.h>
 
 // Display dimension constants
 #define CHAR_WIDTH 18
@@ -36,9 +37,9 @@
 class CC_KAP140_LCD
 {
 public:
-    CC_KAP140_LCD(uint8_t Pin1, uint8_t Pin2);
+    CC_KAP140_LCD(uint8_t cs, uint8_t dc, uint8_t reset );
     void begin();
-    void attach(uint16_t Pin3, char *init);
+    void attach();
     void detach();
     void set(int16_t messageID, char *setPoint);
     void update();
@@ -68,11 +69,13 @@ private:
     bool _apOffAlertMode = false;
     long unsigned int _apOffAlertTimer = 0;
 
+  //  U8G2_SSD1322_NHD_256X64_F_4W_SW_SPI u8g2;
+
     void drawDisplay();
     void fillTestPattern();
     void fillRightData();
     void fillUnits();
     void fillSelfTest();
+    char *formatComma(int number);
 
-    uint8_t _pin1, _pin2, _pin3;
 };

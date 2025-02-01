@@ -1,26 +1,18 @@
 #include "CC_KAP140_LCD.h"
 #include "allocateMem.h"
 #include "commandmessenger.h"
-#include <Arduino.h>
-#include <U8g2lib.h>
+
 #include <cerrno>
 
 #include "kap140_20b_font.h"
 
-String formatWithCommas(int number);
-char *formatComma(int number);
 
 // U8G2_SSD1322_NHD_256X64_F_4W_SW_SPI u8g2(U8G2_R0, /* clock=*/ 13, /* data=*/ 11, /* cs=*/ 10, /* dc=*/ 9, /* reset=*/ 8);	// Enable U8G2_16BIT in u8g2.h
-U8G2_SSD1322_NHD_256X64_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/17, /* dc=*/20, /* reset=*/21);
 
-void rightBlockDisplay(int value);
+U8G2_SSD1322_NHD_256X64_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 17, /* dc=*/ 20, /* reset=*/ 21); 
 
-void drawDisplay();
-
-CC_KAP140_LCD::CC_KAP140_LCD(uint8_t Pin1, uint8_t Pin2)
+CC_KAP140_LCD::CC_KAP140_LCD(uint8_t cs, uint8_t dc, uint8_t reset)
 {
-    _pin1 = Pin1;
-    _pin2 = Pin2;
 }
 
 void CC_KAP140_LCD::begin()
@@ -44,9 +36,8 @@ void CC_KAP140_LCD::begin()
     delay(3000);
 }
 
-void CC_KAP140_LCD::attach(uint16_t Pin3, char *init)
+void CC_KAP140_LCD::attach()
 {
-    _pin3 = Pin3;
 }
 
 void CC_KAP140_LCD::detach()
@@ -345,7 +336,7 @@ void CC_KAP140_LCD::drawDisplay()
     u8g2.sendBuffer();
 }
 
-char *formatComma(int number)
+char * CC_KAP140_LCD::formatComma(int number)
 {
     static char formatted[10]; // Enough to hold "-99,999\0"
     char buffer[7];            // Holds the input number as a string without commas
@@ -409,18 +400,46 @@ void CC_KAP140_LCD::fillRightData()
 {
     // Draw the vertical data (right block numeric with comma for 1000s)
     // Need special handling for the decimal on the in hg baro.
-    char rightBlockDisp[12];
+    // Monospaced display: AB,CDE. Note the comma or . (for baro) always same place.
+    // Also note that - sign (below sea level alt) is always in the A column
+
+    int lCol = RIGHT_TEXT_X;
+    int charWidth = 18;
+    int dispValue = _rightBlockData;
+    char dispStr[8];
+    int xPos = 0;
+
     if (_baroMode == 2)
     {
-        sprintf(rightBlockDisp, "%02d.%02d ", _rightBlockData / 100, _rightBlockData % 100);
+        // Add the decimal point, ignore a comma 
+        sprintf(dispStr, "%d", _rightBlockData);
+        u8g2.drawStr(lCol + (2 * charWidth) - 1, TOP_LINE_Y, ".");
+        u8g2.drawStr(lCol, TOP_LINE_Y, dispStr);
     }
     else
     {
-        strcpy(rightBlockDisp, formatComma(_rightBlockData));
-    }
+        //Manual spacing here. Charaters are 18 wide including 2px spacing before and after.
+        if(_rightBlockData < 0) 
+        {
+            //print negative sign in first column.
+            u8g2.drawStr(lCol, TOP_LINE_Y, "-");
+            dispValue = abs(_rightBlockData);
+        }
 
-    int strWidth = u8g2.getStrWidth(rightBlockDisp);
-    u8g2.drawStr(254 - strWidth, TOP_LINE_Y, rightBlockDisp);
+        sprintf(dispStr, "%d", dispValue);
+
+        xPos = lCol + charWidth * (5 - strlen(dispStr)); 
+        
+        u8g2.drawStr(xPos, TOP_LINE_Y, dispStr);
+        if(dispValue>999) 
+        {
+            // Draw the thousands separator
+            u8g2.drawStr(lCol + (2 * charWidth) - 1, TOP_LINE_Y, ",");
+        }
+
+        u8g2.drawStr(xPos, TOP_LINE_Y, dispStr);
+
+    }
 
     return;
 }
