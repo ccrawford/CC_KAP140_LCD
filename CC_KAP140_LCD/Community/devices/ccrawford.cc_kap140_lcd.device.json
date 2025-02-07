@@ -1,10 +1,10 @@
 {
     "$schema": "./mfdevice.schema.json",
     "Info": {
-      "Label": "CCrawford's CC_KAP140_LCD",
+      "Label": "CC_KAP140_LCD",
       "Type": "CC_KAP140_LCD",
       "Author": "CCrawford",
-      "URL": "https://github.com",
+      "URL": "https://github.com/ccrawford",
       "Version" : "1.0.0"
     },
     "Config": {

@@ -1,0 +1,57 @@
+{
+    "$schema": "./mfdevice.schema.json",
+    "Info": {
+      "Label": "CC_KT76C_LCD",
+      "Type": "CC_KT76C_LCD",
+      "Author": "CCrawford",
+      "URL": "https://github.com/ccrawford/",
+      "Version" : "1.0.0"
+    },
+    "Config": {
+      "Pins": [
+        "CS (reccomend 17)",
+        "DC (reccomend 20)",
+        "Reset (reccomend 21)"
+      ],
+      "isI2C": false
+    },
+    "MessageTypes": [
+      {
+        "id": 0,
+        "label": "XPDR is on",
+        "description": "1 on 0 off"
+      },      
+      {
+        "id": 1,
+        "label": "XPDR state",
+        "description": "$ is a number that indicates lateral mode: : 0 = Off, 1 = Standby,2 = Test, 3 = On, 4 = Alt, 5 = Ground"
+      },
+      {
+        "id": 2,
+        "label": "Current Squawk Code",
+        "description": "$ is the current Transponder Code as a number." 
+      },
+      {
+        "id": 3,
+        "label": "Pressure Alt Flight Level",
+        "description": "$ is the current Pressure Altitude as an FL. e.g. 200 feet is 002" 
+      },
+      {
+        "id": 4,
+        "label": "Reply Indicator",
+        "description": "$ is transmitting ID. 1 on 0 off" 
+      },
+      {
+        "id": 5,
+        "label": "Number Button Press",
+        "description": "$ is a number indicating a number button was pressed (0-7)" 
+      },
+      {
+        "id": 6,
+        "label": "CLR Button Press",
+        "description": "$ is 1 when the CLR Button is pressed"
+      }
+
+    ]
+  }
+  

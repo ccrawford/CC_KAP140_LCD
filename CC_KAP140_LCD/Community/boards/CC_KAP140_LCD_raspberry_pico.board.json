@@ -21,13 +21,14 @@
       "FirmwareExtension": "uf2",
       "FriendlyName": "CCrawford KAP140 LCD RaspiPico",
       "LatestFirmwareVersion": "0.0.1",
-      "MobiFlightType": "CCrawford CC_KAP140_LCD RaspiPico",
+      "MobiFlightType": "CCrawford LCD Radio RaspiPico",
       "ResetFirmwareFile": "reset.raspberry_pico_flash_nuke.uf2",
       "CustomDeviceTypes": [
-        "CC_KAP140_LCD"
+        "CC_KAP140_LCD",
+        "CC_KT76C_LCD"
       ],
       "Community": {
-        "Project": "CCrawford KAP140 with LCD Display",
+        "Project": "CCrawford B/K OLED Radio",
         "Website": "https://github.com/ccrawford/FSHardware",
         "Docs": "https://github.com/ccrawford/FSHardware",
         "Support": "https://github.com/ccrawford/FSHardware"
@@ -45,7 +46,7 @@
       "MaxShifters": 6,
       "MaxSteppers": 6,
       "MaxInputMultiplexer": 6,
-      "MaxCustomDevices": 5
+      "MaxCustomDevices": 1
     },
     "Pins": [
       {

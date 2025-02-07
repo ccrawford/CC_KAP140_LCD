@@ -31,22 +31,27 @@ extern MFEEPROM MFeeprom;
 // reads a string from EEPROM or Flash at given address which is '.' terminated and saves it to the buffer
 bool MFCustomDevice::getStringFromMem(uint16_t addrMem, char *buffer, bool configFromFlash)
 {
-    char     temp     = 0;
-    uint8_t  counter  = 0;
-    uint16_t length   = MFeeprom.get_length();
-    do {
-        if (configFromFlash) {
+    char temp = 0;
+    uint8_t counter = 0;
+    uint16_t length = MFeeprom.get_length();
+    do
+    {
+        if (configFromFlash)
+        {
             temp = pgm_read_byte_near(CustomDeviceConfig + addrMem++);
             if (addrMem > sizeof(CustomDeviceConfig))
                 return false;
-        } else {
+        }
+        else
+        {
             temp = MFeeprom.read_byte(addrMem++);
             if (addrMem > length)
                 return false;
         }
-        buffer[counter++] = temp;              // save character and locate next buffer position
-        if (counter >= MEMLEN_STRING_BUFFER) { // nameBuffer will be exceeded
-            return false;                      // abort copying to buffer
+        buffer[counter++] = temp; // save character and locate next buffer position
+        if (counter >= MEMLEN_STRING_BUFFER)
+        {                 // nameBuffer will be exceeded
+            return false; // abort copying to buffer
         }
     } while (temp != '.'); // reads until limiter '.' and locates the next free buffer position
     buffer[counter - 1] = 0x00; // replace '.' by NULL, terminates the string
@@ -69,14 +74,15 @@ MFCustomDevice::MFCustomDevice()
 
 void MFCustomDevice::attach(uint16_t adrPin, uint16_t adrType, uint16_t adrConfig, bool configFromFlash)
 {
-    if (adrPin == 0) return;
+    if (adrPin == 0)
+        return;
 
     /* **********************************************************************************
         Do something which is required to setup your custom device
     ********************************************************************************** */
 
-    char   *params, *p = NULL;
-    char    parameter[MEMLEN_STRING_BUFFER];
+    char *params, *p = NULL;
+    char parameter[MEMLEN_STRING_BUFFER];
     uint8_t _pin1, _pin2, _pin3;
 
     /* **********************************************************************************
@@ -86,15 +92,20 @@ void MFCustomDevice::attach(uint16_t adrPin, uint16_t adrType, uint16_t adrConfi
     ********************************************************************************** */
     getStringFromMem(adrType, parameter, configFromFlash);
     if (strcmp(parameter, "CC_KAP140_LCD") == 0)
-        _customType = MY_CUSTOM_DEVICE_1;
-
-    if (_customType == MY_CUSTOM_DEVICE_1) {
+        _customType = MY_AP_DEVICE;
+    if (strcmp(parameter, "CC_KT76C_LCD") == 0)
+        _customType = MY_XPDR_DEVICE
+;
+    
+    if (_customType == MY_AP_DEVICE)
+    {
         /* **********************************************************************************
             Check if the device fits into the device buffer
         ********************************************************************************** */
-        if (!FitInMemory(sizeof(CC_KAP140_LCD))) {
+        if (!FitInMemory(sizeof(CC_KAP140_LCD)))
+        {
             // Error Message to Connector
-            cmdMessenger.sendCmd(kStatus, F("Custom Device does not fit in Memory"));
+            cmdMessenger.sendCmd(kStatus, F("Custom Device CC_KAP140_LCD does not fit in Memory"));
             return;
         }
 
@@ -111,11 +122,11 @@ void MFCustomDevice::attach(uint16_t adrPin, uint16_t adrType, uint16_t adrConfi
             In this case just delete the following
         ********************************************************************************** */
         params = strtok_r(parameter, "|", &p);
-        _pin1  = atoi(params);
+        _pin1 = atoi(params);
         params = strtok_r(NULL, "|", &p);
-        _pin2  = atoi(params);
+        _pin2 = atoi(params);
         params = strtok_r(NULL, "|", &p);
-        _pin3  = atoi(params);
+        _pin3 = atoi(params);
 
         /* **********************************************************************************
             Next call the constructor of your custom device
@@ -123,13 +134,73 @@ void MFCustomDevice::attach(uint16_t adrPin, uint16_t adrType, uint16_t adrConfi
         ********************************************************************************** */
         // In most cases you need only one of the following functions
         // depending on if the constuctor takes the variables or a separate function is required
-        _mydevice = new (allocateMemory(sizeof(CC_KAP140_LCD))) CC_KAP140_LCD(_pin1, _pin2, _pin3);
-        _mydevice->attach();
+        _myApDevice = new (allocateMemory(sizeof(CC_KAP140_LCD))) CC_KAP140_LCD(_pin1, _pin2, _pin3);
+        _myApDevice->attach();
         // if your custom device does not need a separate begin() function, delete the following
         // or this function could be called from the custom constructor or attach() function
-        _mydevice->begin();
+        _myApDevice->begin();
         _initialized = true;
-    } else {
+    }
+    else if (_customType == MY_XPDR_DEVICE) {
+        /* **********************************************************************************
+            Check if the device fits into the device buffer
+        ********************************************************************************** */
+        if (!FitInMemory(sizeof(CC_KT76C_LCD))) {
+            // Error Message to Connector
+            cmdMessenger.sendCmd(kStatus, F("Custom Device CC_KT76C_LCD does not fit in Memory"));
+            return;
+        }
+
+        /* **********************************************************************************************
+            Read the pins from the EEPROM or Flash, copy them into a buffer
+            If you have set '"isI2C": true' in the device.json file, the first value is the I2C address
+        ********************************************************************************************** */
+        getStringFromMem(adrPin, parameter, configFromFlash);
+        /* **********************************************************************************************
+            split the pins up into single pins, as the number of pins could be different between
+            multiple devices, it is done here
+        ********************************************************************************************** */
+        params = strtok_r(parameter, "|", &p);
+        _pin1  = atoi(params);
+        params = strtok_r(NULL, "|", &p);
+        _pin2  = atoi(params);
+        params = strtok_r(NULL, "|", &p);
+        _pin3  = atoi(params);
+
+        /* **********************************************************************************
+            Read the configuration from the EEPROM or Flash, copy it into a buffer.
+        ********************************************************************************** */
+        getStringFromMem(adrConfig, parameter, configFromFlash);
+        /* **********************************************************************************
+            split the config up into single parameter. As the number of parameters could be
+            different between multiple devices, it is done here.
+            This is just an example how to process the init string. Do NOT use
+            "," or ";" as delimiter for multiple parameters but e.g. "|"
+            For most customer devices it is not required.
+            In this case just delete the following
+        ********************************************************************************** */
+        uint16_t Parameter1;
+        char    *Parameter2;
+        params     = strtok_r(parameter, "|", &p);
+        Parameter1 = atoi(params);
+        params     = strtok_r(NULL, "|", &p);
+        Parameter2 = params;
+
+        /* **********************************************************************************
+            Next call the constructor of your custom device
+            adapt it to the needs of your constructor
+        ********************************************************************************** */
+        // In most cases you need only one of the following functions
+        // depending on if the constuctor takes the variables or a separate function is required
+        _myXpdrDevice = new (allocateMemory(sizeof(CC_KT76C_LCD))) CC_KT76C_LCD(_pin1, _pin2, _pin3);
+        _myXpdrDevice->attach();
+        // if your custom device does not need a separate begin() function, delete the following
+        // or this function could be called from the custom constructor or attach() function
+        _myXpdrDevice->begin();
+        _initialized = true;
+    }
+    else
+    {
         cmdMessenger.sendCmd(kStatus, F("Custom Device is not supported by this firmware version"));
     }
 }
@@ -142,8 +213,12 @@ void MFCustomDevice::attach(uint16_t adrPin, uint16_t adrType, uint16_t adrConfi
 void MFCustomDevice::detach()
 {
     _initialized = false;
-    if (_customType == MY_CUSTOM_DEVICE_1) {
-        _mydevice->detach();
+    if (_customType == MY_AP_DEVICE)
+    {
+        _myApDevice->detach();
+    } else  if (_customType == MY_XPDR_DEVICE)
+    {
+        _myXpdrDevice->detach();
     }
 }
 
@@ -158,12 +233,17 @@ void MFCustomDevice::detach()
 ********************************************************************************** */
 void MFCustomDevice::update()
 {
-    if (!_initialized) return;
+    if (!_initialized)
+        return;
     /* **********************************************************************************
         Do something if required
     ********************************************************************************** */
-    if (_customType == MY_CUSTOM_DEVICE_1) {
-        _mydevice->update();
+    if (_customType == MY_AP_DEVICE)
+    {
+        _myApDevice->update();
+    } else if(_customType == MY_XPDR_DEVICE)
+    {
+        _myXpdrDevice->update();
     }
 }
 
@@ -174,9 +254,14 @@ void MFCustomDevice::update()
 ********************************************************************************** */
 void MFCustomDevice::set(int16_t messageID, char *setPoint)
 {
-    if (!_initialized) return;
+    if (!_initialized)
+        return;
 
-    if (_customType == MY_CUSTOM_DEVICE_1) {
-        _mydevice->set(messageID, setPoint);
+    if (_customType == MY_AP_DEVICE)
+    {
+        _myApDevice->set(messageID, setPoint);
+    } else if (_customType == MY_XPDR_DEVICE)
+    {
+        _myXpdrDevice->set(messageID, setPoint);
     }
 }

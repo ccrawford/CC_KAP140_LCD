@@ -4,14 +4,12 @@
 
 #include <cerrno>
 
-#include "kap140_20b_font.h"
-
 
 // U8G2_SSD1322_NHD_256X64_F_4W_SW_SPI u8g2(U8G2_R0, /* clock=*/ 13, /* data=*/ 11, /* cs=*/ 10, /* dc=*/ 9, /* reset=*/ 8);	// Enable U8G2_16BIT in u8g2.h
 
-U8G2_SSD1322_NHD_256X64_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 17, /* dc=*/ 20, /* reset=*/ 21); 
+// U8G2_SSD1322_NHD_256X64_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 17, /* dc=*/ 20, /* reset=*/ 21);
 
-CC_KAP140_LCD::CC_KAP140_LCD(uint8_t cs, uint8_t dc, uint8_t reset)
+CC_KAP140_LCD::CC_KAP140_LCD(uint8_t cs, uint8_t dc, uint8_t reset) : u8g2(U8G2_R0, /* cs=*/17, /* dc=*/20, /* reset=*/21)
 {
 }
 
@@ -25,8 +23,8 @@ void CC_KAP140_LCD::begin()
     // u8g2.setDisplayRotation(0);  // Set in constructor. R0 is pins on right, narrow part on bottom.
 
     u8g2.clearBuffer();
-    u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, "CC 172 LCD 0.1");
-    u8g2.drawStr(LEFT_EDGE_X + 6, BOT_LINE_Y, "CCRAWFORD.ORG");
+    u8g2.drawStr(1, 27, "CC 172 AP 0.1");
+    u8g2.drawStr(7, 62, "CCRAWFORD.ORG");
     u8g2.sendBuffer();
     delay(3000);
 
@@ -227,7 +225,7 @@ void CC_KAP140_LCD::drawDisplay()
         // blinks like 0.7sec on 0.3 sec off
         if (millis() % 1000 < 700)
         {
-            u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, " AP");
+            u8g2.drawStr(K140_LEFT_EDGE_X, TOP_LINE_Y, " AP");
             u8g2.drawGlyph(AP_X, TOP_LINE_Y, GLYPH_AP); // AP_box
         }
 
@@ -260,7 +258,7 @@ void CC_KAP140_LCD::drawDisplay()
         break;
     }
 
-    u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, val.c_str());
+    u8g2.drawStr(K140_LEFT_EDGE_X, TOP_LINE_Y, val.c_str());
 
     // Draw the AP on symbol
     if (_apActive)
@@ -313,7 +311,7 @@ void CC_KAP140_LCD::drawDisplay()
         break;
     }
 
-    u8g2.drawStr(LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
+    u8g2.drawStr(K140_LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
     if (_lateralArmMode)
         u8g2.drawGlyph(AP_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
@@ -336,7 +334,7 @@ void CC_KAP140_LCD::drawDisplay()
     u8g2.sendBuffer();
 }
 
-char * CC_KAP140_LCD::formatComma(int number)
+char *CC_KAP140_LCD::formatComma(int number)
 {
     static char formatted[10]; // Enough to hold "-99,999\0"
     char buffer[7];            // Holds the input number as a string without commas
@@ -411,34 +409,33 @@ void CC_KAP140_LCD::fillRightData()
 
     if (_baroMode == 2)
     {
-        // Add the decimal point, ignore a comma 
+        // Add the decimal point, ignore a comma
         sprintf(dispStr, "%d", _rightBlockData);
         u8g2.drawStr(lCol + (2 * charWidth) - 1, TOP_LINE_Y, ".");
         u8g2.drawStr(lCol, TOP_LINE_Y, dispStr);
     }
     else
     {
-        //Manual spacing here. Charaters are 18 wide including 2px spacing before and after.
-        if(_rightBlockData < 0) 
+        // Manual spacing here. Charaters are 18 wide including 2px spacing before and after.
+        if (_rightBlockData < 0)
         {
-            //print negative sign in first column.
+            // print negative sign in first column.
             u8g2.drawStr(lCol, TOP_LINE_Y, "-");
             dispValue = abs(_rightBlockData);
         }
 
         sprintf(dispStr, "%d", dispValue);
 
-        xPos = lCol + charWidth * (5 - strlen(dispStr)); 
-        
+        xPos = lCol + charWidth * (5 - strlen(dispStr));
+
         u8g2.drawStr(xPos, TOP_LINE_Y, dispStr);
-        if(dispValue>999) 
+        if (dispValue > 999)
         {
             // Draw the thousands separator
             u8g2.drawStr(lCol + (2 * charWidth) - 1, TOP_LINE_Y, ",");
         }
 
         u8g2.drawStr(xPos, TOP_LINE_Y, dispStr);
-
     }
 
     return;
@@ -475,7 +472,7 @@ void CC_KAP140_LCD::fillTestPattern()
 
     // : is the 8+V, _ is the 8 + D, ; is the 8 + I
     val = ":_:";
-    u8g2.drawStr(LEFT_EDGE_X, TOP_LINE_Y, val.c_str());
+    u8g2.drawStr(K140_LEFT_EDGE_X, TOP_LINE_Y, val.c_str());
 
     u8g2.drawGlyph(AP_X, TOP_LINE_Y, GLYPH_AP); // AP_box
 
@@ -489,7 +486,7 @@ void CC_KAP140_LCD::fillTestPattern()
     u8g2.drawStr(RIGHT_TEXT_X, TOP_LINE_Y, val.c_str());
 
     val = ":8:";
-    u8g2.drawStr(LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
+    u8g2.drawStr(K140_LEFT_EDGE_X, BOT_LINE_Y, val.c_str());
     u8g2.drawGlyph(AP_X - 5, BOT_LINE_Y, GLYPH_ARM); // ARM
 
     val = ";8;";
