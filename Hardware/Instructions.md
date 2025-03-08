@@ -13,13 +13,14 @@ Bill of Materials:
 4. 1 Dual rotary encoder. Search EC11EBB24C03. You can use the green or the yellow ones. Green are more common. Yellow are cheaper.
 5. 1 RP2040 microprocessor and USB cable. I use the most common $2-3 type. Aka Raspberry Pi Pico. No wireless necessary. You want one WITHOUT headers.
 6. 1 3.12" OLED display. You can use whatever color you want. I like to get the white ones and then cover with ORACAL film to get the proper color display. Search: 3.12 OLED. You must get one with the 4-wire SPI interface. Do NOT just get a bare screen or one with just a dangling ribbon cable. https://www.aliexpress.us/item/3256805975276793.html
+6b. Optional: If you want the orange color, get some Oracal 8300, color 033 "red orange" to cover the display. 
 7. Hook up wire. Personal preference here, but I like to use 30 AWG wire-wrap wire like this: https://www.aliexpress.us/item/3256802844140015.html but I use 26 awg silicone wire for the display. https://www.aliexpress.us/item/3256807070653563.html
 8. 4 m3 x 20 bolts. Head type doesn't really matter. Button head probably the best choice. https://www.aliexpress.us/item/3256806241082021.html search: m3 20 and pick.
 9. 4 m3 inserts: I like these as I typically assemble/disassmble a lot during construction. You could skip these, but may need to make the bosses where the screws anchor a bit tighter. https://www.aliexpress.us/item/3256803396040989.html search: m3 brass insert
 
 Instructions: 
-1. 3d print white: Fascia, button matrix. 3d print black (but color not mandatory) backing plate, base plate, knobs. 
-2. Spray paint the fascia and buttons black. I use 3-5 light coats, 10-15 mintues apart.
+1. 3d print white: Fascia. 3d print black, buttons, backing plate, base plate, knobs. 
+2. Spray paint the fascia black and the buttons white. I use 3-5 light coats, 10-15 mintues apart.
 3. Laser cut the protoboard. Alignment of the holes in the protoboard with the template is critical here. Cut it so the copper side is face down!
 4. Laser etch the buttons and fascia, using care to center lettering.
 5. Use the backing plate as a template to place the switches and encoder on the cut protoboard. Double check the alignment. Get the switches all the way down on the board with the connected terminals on the switches aligned horizontally.
