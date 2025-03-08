@@ -15,10 +15,7 @@ autopilot using a RP2040 and a 3.12" OLED screen. The MobiFlight profile is for 
 <em>Running</em></br>
 <img src="/Photos/IMG_3220.JPEG" width="40%" alt="Side view">
 
-<em>Display Test</em></br>
-<img src="/Photos/IMG_3216.JPEG" width="40%" alt="Side view">
-
 <em>In action YouTube link</em></br>
-[![Device in action](/Photos/videoThumbnail.png)](https://youtu.be/b3xRHRXjemo)
+[![Video Demo](https://img.youtube.com/vi/b3xRHRXjemo/0.jpg)](https://youtu.be/b3xRHRXjemo)
 
 
