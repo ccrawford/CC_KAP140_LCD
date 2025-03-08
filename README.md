@@ -7,11 +7,11 @@ autopilot using a RP2040 and a 3.12" OLED screen. The MobiFlight profile is for 
 ** Requires use of a custom MobiFlight board and device (included here) to get the screen to function.
 * 3d printer. I use a very old FlashForge Creator Pro 2, so any decent 3d printer will suffice.
 * Laser cutter/etcher. I use my local library's Epilog Fusion 60. Alternately, you could cut the PCB with a dremel and paint/hand letter.
-* Various hardware and supplies listed [here](https://github.com/ccrawford/CC_KAP140_LCD/blob/main/Hardware/Instructions.md)
+* Various hardware and supplies listed [here](/Hardware/Instructions.md)
 
 ## Pictures
 
-![image](https://github.com/ccrawford/CC_KAP140_LCD/blob/main/Photos/IMG_3220.JPEG)
+![image](/Photos/IMG_3220.JPEG)
 
 
 
