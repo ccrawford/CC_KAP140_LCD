@@ -11,7 +11,7 @@ autopilot using a RP2040 and a 3.12" OLED screen. The MobiFlight profile is for 
 
 ## Pictures
 
-![image](https://github.com/MobiFlight/MobiFlight-Connector/assets/3263285/58bf29c7-11df-47e9-a045-99ca731d917c)
+![image](https://github.com/ccrawford/CC_KAP140_LCD/blob/main/Photos/IMG_3220.JPEG)
 
 
 
