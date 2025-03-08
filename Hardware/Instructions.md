@@ -1,5 +1,5 @@
 ## Files
-The *.f3d files are Fusion archives. 
+The *.f3d files are Fusion archives if you want to mod.
 The STLs are as I printed them. 
 The SVGs are for the laser. 
     In the PCB dxf file, red is used in vector mode on the laser cutter to cut the protoboard to size.
@@ -81,5 +81,17 @@ I'd say the total cost here is around $30. The screen at $15, the dual encoder a
     NOTE the mcc file is written for the WBSim C172! If you are using the base C172 from Asobo you will need to adjust, and some features will not be available.
 
 ## Photos
-<img src="/Photos/IMG_3210.JPEG)" width="30%" alt="Side view">
+<em>Side View:</em>
+<img src="../Photos/IMG_3210.JPEG" width="30%" alt="Side view">
+
+<em>Back cover removed:</em>
+<img src="../Photos/IMG_3212.JPEG" width="30%" alt="Back removed">
+
+
+<em>Perfboard opposite side and backing plate:</em>
+<img src="../Photos/IMG_3213.JPEG" width="30%" alt="Pcb removed">
+
+<em>Get a display that looks like this:</em>
+<img src="../Photos/IMG_3204.JPG" width="30%" alt="Display">
+<img src="../Photos/IMG_3204.JPG" width="30%" alt="Display">
     
