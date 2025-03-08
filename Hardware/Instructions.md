@@ -93,5 +93,5 @@ I'd say the total cost here is around $30. The screen at $15, the dual encoder a
 
 <em>Get a display that looks like this:</em></br>
 <img src="../Photos/IMG_3204.JPG" width="30%" alt="Display">
-<img src="../Photos/IMG_3204.JPG" width="30%" alt="Display">
+<img src="../Photos/IMG_3205.JPG" width="30%" alt="Display">
     
