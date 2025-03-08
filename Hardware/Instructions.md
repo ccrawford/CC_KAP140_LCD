@@ -81,6 +81,5 @@ I'd say the total cost here is around $30. The screen at $15, the dual encoder a
     NOTE the mcc file is written for the WBSim C172! If you are using the base C172 from Asobo you will need to adjust, and some features will not be available.
 
 ## Photos
-![Image]
-
+<img src="/Photos/IMG_3210.JPEG)" width="30%" alt="Side view">
     
