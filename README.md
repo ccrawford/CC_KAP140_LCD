@@ -18,10 +18,7 @@ autopilot using a RP2040 and a 3.12" OLED screen. The MobiFlight profile is for 
 <em>Display Test</em></br>
 <img src="/Photos/IMG_3216.JPEG" width="40%" alt="Side view">
 
-<em>In action</em></br>
-<video width="640" height="360" controls>
-  <source src="/Photos/IMG_3204.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<em>In action YouTube link</em></br>
+[![Device in action](/Photos/videoThumbnail.png)](https://youtu.be/b3xRHRXjemo)
 
 
