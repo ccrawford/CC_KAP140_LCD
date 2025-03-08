@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ModuleType>MobiFlight GNC255 Pico</ModuleType>
+  <ModuleName>CC_KAP140_LCD</ModuleName>
+  <PowerSavingTime>600</PowerSavingTime>
+  <CustomDevice Name="KAP140_LCD" CustomType="CC_KAP140_LCD" Pins="18|19|17|20|21" Config="">
+    <ConfiguredPins>
+      <string>18</string>
+      <string>19</string>
+      <string>17</string>
+      <string>20</string>
+      <string>21</string>
+    </ConfiguredPins>
+  </CustomDevice>
+  <Button Name="ALT_ENC_BUTTON" Pin="2" />
+  <Encoder Name="ALT_ENC_OUTER" PinLeft="4" PinRight="3" EncoderType="2" />
+  <Encoder Name="ALT_ENC_INNER" PinLeft="1" PinRight="15" EncoderType="2" />
+  <Button Name="BARO_BUTTON" Pin="5" />
+  <Button Name="ARM_BUTTON" Pin="6" />
+  <Button Name="UP_BUTTON" Pin="7" />
+  <Button Name="DN_BUTTON" Pin="8" />
+  <Button Name="ALT_BUTTON" Pin="9" />
+  <Button Name="REV_BUTTON" Pin="10" />
+  <Button Name="APR_BUTTON" Pin="11" />
+  <Button Name="NAV_BUTTON" Pin="12" />
+  <Button Name="HDG_BUTTON" Pin="13" />
+  <Button Name="AP_BUTTON" Pin="14" />
+</Config>
