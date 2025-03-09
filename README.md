@@ -9,6 +9,7 @@ autopilot using a RP2040 and a 3.12" OLED screen. The MobiFlight profile is for 
 * Laser cutter/etcher. I use my local library's Epilog Fusion 60. Alternately, you could cut the PCB with a dremel and paint/hand letter.
 * Various hardware and supplies listed [here](/Hardware/Instructions.md)
 * More pictures and build instructions in the [Hardware folder](/Hardware)
+* See detailed information on the OLED screen [here](/Hardware/NotesOnOLED.md)
 
 ## Pictures
 

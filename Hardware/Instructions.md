@@ -30,7 +30,9 @@ I'd say the total cost here is around $30. The screen at $15, the dual encoder a
 4. Laser etch the buttons and fascia, using care to center lettering.
 5. Use the backing plate as a template to place the switches and encoder on the cut protoboard. Double check the alignment. Get the switches all the way down on the board with the connected terminals on the switches aligned horizontally.
 6. Start soldering! 
-    Start with the display. Tricky!
+7.  Start with the display. **See detailed information on the display configuration [here](NotesOnOLED.md) **
+    Configure the display for 4SPI, and remove the headers.
+
     Using Hardware SPI:
     | RP2040 pin | OLED pin | Comment |
     | --- | --- | --- |
@@ -42,7 +44,8 @@ I'd say the total cost here is around $30. The screen at $15, the dual encoder a
     | GND | 1 | Ground |
     | VBUS | 2 | 5v |
 
-    Solder the switches
+
+8. Solder the switches
     I use a bare piece of single-strand wire to run a ground line across all the switches, then run awg30 to each switch/encoder pin to the RP2040
     You must use the correct pins for the display, however you can use whatever pins you want to connect the switches, but if you want to use my Mobiflight config, you'll need to follow this config:
 
